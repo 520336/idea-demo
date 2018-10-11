@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+
+<form id="editFormUser">
+    <table align="center">
+        <tr>
+            <td>姓名</td>
+            <td>
+                <input type="hidden" id="x" name="id" th:value="${user.id}"/>
+                <input name="name" th:value="${user.name}" class="easyui-textbox" style="width:200px"/>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>性别</td>
+            <td>
+                <input type="radio" name="sex" value="1" th:checked="${user.sex}" />男
+                <input type="radio" name="sex" value="2" th:checked="${user.sex}" />女
+            </td>
+        </tr>
+        <tr>
+            <td>年龄</td>
+            <td>
+                <input type="text" th:value="${user.age}" name="age" class="easyui-textbox" style="width:200px"/>
+            </td>
+        </tr>
+    </table>
+
+
+    <!-- <div >角色:</div>
+    <div id="userListTable"></div> -->
+</form>
+</body>
+</html>

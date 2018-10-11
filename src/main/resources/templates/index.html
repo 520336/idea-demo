@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Insert title here</title>
+    <!-- 引入EasyUI的样式文件-->
+    <link rel="stylesheet"
+          href="../EasyUI/themes/default/easyui.css" type="text/css"/>
+
+    <!-- 引入EasyUI的图标样式文件-->
+    <link rel="stylesheet"
+          href="../EasyUI/themes/icon.css" type="text/css"/>
+    <!-- 引入JQuery -->
+    <script type="text/javascript"
+            src="../EasyUI/jquery.min.js"></script>
+
+    <!-- 引入EasyUI -->
+    <script type="text/javascript"
+            src="../EasyUI/jquery.easyui.min.js"></script>
+
+    <!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript"
+            src="../EasyUI/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript"
+            src="../EasyUI/util-js.js"></script>
+</head>
+<body class="easyui-layout">
+
+
+<div data-options="region:'north',title:'North Title',split:true" style="height:100px;">
+    <!-- <center><iframe width="420" scrolling="no" height="60" frameborder="0" allowtransparency="true"
+             src="http://i.tianqi.com/index.php?c=code&id=12&icon=1&num=5&site=12"></iframe>
+    </center> -->
+
+
+</div>
+<div data-options="region:'west',title:'West',split:true" style="width:250px;">
+    <ul class="easyui-tree" id="myTree"></ul>
+</div>
+<div data-options="region:'center',title:'center title'">
+    <div id="myTabs" class="easyui-tabs" data-options="fit:true">
+        <div title="欢迎" style="padding:20px;display:none;">
+            <h1>欢迎使用</h1>
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+
+    $(function () {
+        $("#myTree").tree({
+            //url:'../data/tree.json',
+            url: "/user/queryTree",
+            lines: true,
+            parentField: 'pid',
+            onClick: function (node) {
+                if (undefined == node.childrens) {
+                    var flag = $('#myTabs').tabs('exists', node.text);
+                    if (flag) {
+                        $('#myTabs').tabs('select', node.text)
+                    } else {
+                        $('#myTabs').tabs('add', {
+                            title: node.text,
+                            content: createFrame(node.url),
+                            closable: true,
+                            tools: [
+                                {
+                                    iconCls: 'icon-mini-refresh',
+                                    handler: function () {
+                                        var selectTab = $('#myTabs').tabs('getSelected');
+                                        $('#myTabs').tabs('update', {
+                                            tab: selectTab,
+                                            options: {
+                                                content: createFrame(node.url)
+                                            }
+                                        });
+                                    }
+                                }
+                            ]
+                        })
+                    }
+                }
+            }
+        })
+
+    })
+
+    function createFrame(url) {
+        return '<iframe border="0" scrolling="yes" frameborder="0"  src="..' + url + '" style="width:99.9%;height:99.5%;"></iframe>';
+    }
+</script>
+
+</body>
+</html>

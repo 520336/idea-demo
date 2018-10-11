@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Insert title here</title>
+    <!-- 引入EasyUI的样式文件-->
+    <link rel="stylesheet"
+          href="../EasyUI/themes/default/easyui.css" type="text/css"/>
+
+    <!-- 引入EasyUI的图标样式文件-->
+    <link rel="stylesheet"
+          href="../EasyUI/themes/icon.css" type="text/css"/>
+
+    <!-- 引入JQuery -->
+    <script type="text/javascript"
+            src="../EasyUI/jquery.min.js"></script>
+
+    <!-- 引入EasyUI -->
+    <script type="text/javascript"
+            src="../EasyUI/jquery.easyui.min.js"></script>
+
+    <!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript"
+            src="../EasyUI/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript"
+            src="../EasyUI/util-js.js"></script>
+</head>
+<body>
+<br/>
+<!--<input type="button" value="导出poi" onclick="downExcel()"/>
+
+<input type="button" value="导出十万条数据" onclick="downExcel3()"/>-->
+
+<!-- <form class="form-horizontal" id="form_table" action="#" th:action="@{/wbx/importExcel}" enctype="multipart/form-data" method="post">
+    <input class="form-input" type="file" name="filename"></input>
+    <br/>
+    <button type="submit" class="btn">开始导入</button>
+</form> -->
+姓名<input type="text" id="name" class="easyui-textbox"/>&nbsp;&nbsp;&nbsp;
+        <input type="button" value="搜索" onclick="search()"/>
+<br/>
+<br/>
+<table id="userTable"></table>
+<div id="addUser"></div>
+<script type="text/javascript">
+    $(function(){
+        search();
+    })
+    function upUser(id){
+
+        $('#addUser').dialog({
+            title:'修改页面',
+            href:'/user/toEdit?id='+id,
+            width:500,
+            height:400,
+            modal:false,
+            buttons:[{
+                text:'保存',
+                handler:function(){
+                    $.ajax({
+                        url:'/user/updateUser',
+                        type:'post',
+                        data:$('#editFormUser').serialize(),
+                        success:function(msg){
+                            $('#addUser').dialog('close');
+                            search()
+                            $.messager.show({
+                                title:'我的消息',
+                                msg:'修改成功',
+                                timeout:2000,
+                                showType:'slide'
+                            });
+                        }
+                    })
+
+                }
+
+            },{
+                text:'关闭',
+                handler:function(){
+                    $('#addUser').dialog("close");
+                }
+            }]
+        });
+    }
+
+    function delUser(id){
+
+        $.ajax({
+            url:'/user/deleteUser?id='+id,
+            type:'post',
+            data:$('#id').serialize(),
+            success:function(inof){
+                search()
+                $.messager.show({
+                    title:'我的消息',
+                    msg:'删除成功',
+                    timeout:2000,
+                    showType:'slide'
+                });
+            }
+        })
+    }
+    function search(){
+        $('#userTable').datagrid({
+            url:'/user/queryUser',
+
+            queryParams:{
+                name:$('#name').val()
+
+            },
+
+            checkOnSelect:false,
+            selectOnCheck:false,
+            singleSelect:true,
+            pagination:true,
+            pageNumber:1,
+            pageSize:3,
+            pageList:[3,5,10],
+            columns:[
+                [
+                    {field:'check',checkbox:true},
+                    {field:'name',title:'姓名',width:100},
+                    {field:'age',title:'年龄',width:100},
+
+
+
+                    {field:'sex',title:'性别',width:100,
+                        formatter:function(value,row,index){
+                            if(value == 1){
+                                return "男"
+                            }
+                            if(value == 2){
+                                return "女"
+                            }
+                        }
+                    },
+
+
+
+
+                    {field:'up',title:'操作',width:100,
+                        formatter:function(value,row,index){
+                            return '<input type="button" value="修改" onclick="upUser(\''+row.id+'\')"/>&nbsp;&nbsp;<input type="button" value="删除" onclick="delUser(\''+row.id+'\')"/>'
+                        }
+                    }
+
+                ]
+            ],
+            toolbar:[{
+                iconCls:'icon-add',
+                text:'新增',
+                handler:function(){
+                    //添加的弹框
+                    $('#addUser').dialog({
+                        title:'新增页面',
+                        href:'/user/toAdd',
+                        width:500,
+                        height:450,
+                        modal:false,
+                        buttons:[{
+                            text:'保存',
+                            handler:function(){
+                                $.ajax({
+                                    url:'/user/saveUser',
+                                    type:'post',
+                                    data:$('#addForm').serialize(),
+                                    success:function(msg){
+                                        $('#addUser').dialog('close');
+                                        search();
+                                        $.messager.show({
+                                            title:'我的消息',
+                                            msg:'新增成功',
+                                            timeout:2000,
+                                            showType:'slide'
+                                        });
+                                    }
+                                })
+
+                            }
+
+                        },{
+                            text:'关闭',
+                            handler:function(){
+                                $('#addUser').dialog("close");
+                            }
+                        }]
+                    });
+                }
+            }]
+        })
+    }
+    function downExcel(){
+
+        location.href="../user/downExcel";
+
+    }
+
+    function downExcel3(){
+
+        location.href="../user/downExcelsjy";
+
+    }
+</script>
+
+</body>
+</html>
